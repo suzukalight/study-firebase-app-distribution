@@ -1,4 +1,4 @@
-package com.studyfirebaseappdistribution
+package com.suzukalight.studyfirebaseappdistribution
 
 import android.app.Application
 import com.facebook.react.PackageList

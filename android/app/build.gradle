@@ -109,12 +109,12 @@ android {
         development {
             dimension "env"
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "suburi dev"
+            resValue "string", "app_name", "StudyFirebaseAppDistribution dev"
         }
         staging {
             dimension "env"
             applicationIdSuffix ".stg"
-            resValue "string", "app_name", "suburi stg"
+            resValue "string", "app_name", "StudyFirebaseAppDistribution stg"
         }
     }
 }
