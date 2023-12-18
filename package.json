@@ -1,7 +1,11 @@
 {
-  "name": "StudyFirebaseAppDistribution",
+  "name": "study-firebase-app-distribution",
   "version": "0.0.1",
   "private": true,
+  "main": "index.js",
+  "repository": "https://github.com/suzukalight/study-firebase-app-distribution.git",
+  "author": "suzukalight <mail@mkubara.com>",
+  "license": "MIT",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
