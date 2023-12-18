@@ -7,15 +7,27 @@
   "author": "suzukalight <mail@mkubara.com>",
   "license": "MIT",
   "scripts": {
+    "install:pod": "cd ios && pod install --repo-update && cd ..",
+    "clean": "yarn clean:watchman && yarn clean:android && yarn clean:ios",
+    "clean:watchman": "watchman watck-del-all ../../",
+    "clean:ios": "yarn clean:ios:build && yarn clean:ios:pod",
+    "clean:ios:build": "cd ios && rm -rf ~/Library/Developer/Xcode/DerivedData/* && cd ..",
+    "clean:ios:pod": "cd ios && pod deintegrate && rm -rf Pods && pod setup && cd ..",
+    "clean:android": "cd android && ./gradlew clean && rm -rf app/build && cd ..",
     "android": "react-native run-android",
+    "android:local": "ENVFILE=.env.development yarn android --mode developmentDebug --appIdSuffix dev",
+    "android:staging": "ENVFILE=.env.staging yarn android --mode stagingRelease --appIdSuffix stg",
     "ios": "react-native run-ios",
+    "ios:local": "ENVFILE=.env.development yarn ios --mode Debug --scheme StudyFirebaseAppDistribution",
+    "ios:staging": "ENVFILE=.env.staging yarn ios --mode Staging --scheme staging",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.73.0"
+    "react-native": "0.73.0",
+    "react-native-config": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
