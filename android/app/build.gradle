@@ -74,14 +74,16 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.studyfirebaseappdistribution"
+    namespace "com.suzukalight.studyfirebaseappdistribution"
     defaultConfig {
-        applicationId "com.studyfirebaseappdistribution"
+        applicationId "com.suzukalight.studyfirebaseappdistribution"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        resValue "string", "build_config_package", "com.suzukalight.studyfirebaseappdistribution"
     }
+    apply from: 'signingConfigs/release.gradle', to: android
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -100,6 +102,19 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    flavorDimensions "env"
+    productFlavors {
+        development {
+            dimension "env"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "suburi dev"
+        }
+        staging {
+            dimension "env"
+            applicationIdSuffix ".stg"
+            resValue "string", "app_name", "suburi stg"
         }
     }
 }
