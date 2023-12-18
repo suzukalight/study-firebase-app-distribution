@@ -132,3 +132,10 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+// https://github.com/luggit/react-native-config#android-1
+project.ext.envConfigFiles = [
+    development: ".env.development",
+    staging: ".env.staging",
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
