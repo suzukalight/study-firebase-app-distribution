@@ -22,7 +22,8 @@
     "ios:staging": "ENVFILE=.env.staging yarn ios --mode Staging --scheme staging",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "build": "echo 'no build script'"
   },
   "dependencies": {
     "react": "18.2.0",
