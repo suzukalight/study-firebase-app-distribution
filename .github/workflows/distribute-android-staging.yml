@@ -1,0 +1,53 @@
+name: Distribute Android Staging App with App Distribution
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --network-timeout 300000
+      - name: Build packages
+        run: yarn build
+      - name: Grant execute permission for gradlew
+        run: cd apps/mobile/android && chmod +x gradlew
+      - name: Write release.keystore and Signing Config
+        env:
+          ANDROID_SIGNING_CONFIGS_RELEASE: ${{ secrets.ANDROID_SIGNING_CONFIGS_RELEASE }}
+          ANDROID_KEYSTORE_RELEASE: ${{ secrets.ANDROID_KEYSTORE_RELEASE }}
+        run: |
+          mkdir -p apps/mobile/android/app/signingConfigs
+          echo "$ANDROID_SIGNING_CONFIGS_RELEASE" > apps/mobile/android/app/signingConfigs/release.gradle
+          echo "$ANDROID_KEYSTORE_RELEASE" | base64 --decode > apps/mobile/android/app/release.keystore
+      - name: Bump gradle version code
+        uses: chkfung/android-version-actions@v1.2.1
+        with:
+          gradlePath: apps/mobile/android/app/build.gradle
+          versionCode: ${{github.run_number}}
+      - name: Build with Gradle
+        run: cd apps/mobile/android && ./gradlew assembleStagingRelease
+      - name: Upload a Build Artifact
+        id: upload_artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-staging-release
+          path: apps/mobile/android/app/build/outputs/apk/staging/release/app-staging-release.apk
+      - name: Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID_STAGING }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS_JSON }}
+          groups: my-first-testers
+          file: apps/mobile/android/app/build/outputs/apk/staging/release/app-staging-release.apk
